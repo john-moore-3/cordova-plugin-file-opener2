@@ -45,7 +45,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         // TODO: test if this is a URI or a path
         NSURL *fileURL = [NSURL URLWithString:path];
         
-        localFile = fileURL.path;
+        NSString *quote = @"'";
+        NSString *localFile = @"";
+        //localFile = fileURL.path;
+        
+        localFile = [localFile stringByAppendingString:quote];
+        localFile = [localFile stringByAppendingString:fileURL.path];
+        localFile = [localFile stringByAppendingString:quote];
         
         NSLog(@"looking for file at %@", fileURL);
         NSFileManager *fm = [NSFileManager defaultManager];
