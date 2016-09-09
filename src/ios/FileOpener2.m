@@ -31,14 +31,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 - (void) open: (CDVInvokedUrlCommand*)command {
 
     NSString *path = [[command.arguments objectAtIndex:0] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString *uti = command.arguments[1];
-    NSLog(@"FileOpener2: uti before - %@", uti);
+    NSString *mimeType = command.arguments[1];
     
-    if (!uti || (NSNull*)uti == [NSNull null]) {
+    if (!mimeType || (NSNull*)mimeType == [NSNull null]) {
         NSArray *dotParts = [path componentsSeparatedByString:@"."];
         NSString *fileExt = [dotParts lastObject];
         
         uti = (__bridge NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)fileExt, NULL);
+    } else {
+        uti = (__bridge NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)mimeType, NULL);
     }
 
     CDVViewController* cont = (CDVViewController*)[ super viewController ];
@@ -50,7 +51,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         
         NSLog(@"FileOpener2: Looking for file at %@", fileURL);
         NSLog(@"FileOpener2: localFile - %@", localFile);
-        NSLog(@"FileOpener2: uti after - %@", uti);
+        NSLog(@"FileOpener2: uti - %@", uti);
         
         NSFileManager *fm = [NSFileManager defaultManager];
         if(![fm fileExistsAtPath:localFile]) {
@@ -65,6 +66,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         self.controller = [UIDocumentInteractionController  interactionControllerWithURL:fileURL];
         self.controller.delegate = self;
         self.controller.UTI = uti;
+        self.controller.name = [fileURL.pathComponents lastObject];
 
         CGRect rect = CGRectMake(0, 0, 1000.0f, 150.0f);
         CDVPluginResult* pluginResult = nil;
