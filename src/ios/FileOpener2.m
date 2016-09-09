@@ -30,9 +30,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 - (void) open: (CDVInvokedUrlCommand*)command {
 
-    //NSString *path = command.arguments[0];
     NSString *path = [[command.arguments objectAtIndex:0] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *uti = command.arguments[1];
+    NSLog(@"FileOpener2: uti before - %@", uti);
+    
     if (!uti || (NSNull*)uti == [NSNull null]) {
         NSArray *dotParts = [path componentsSeparatedByString:@"."];
         NSString *fileExt = [dotParts lastObject];
@@ -49,6 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         
         NSLog(@"FileOpener2: Looking for file at %@", fileURL);
         NSLog(@"FileOpener2: localFile - %@", localFile);
+        NSLog(@"FileOpener2: uti after - %@", uti);
         
         NSFileManager *fm = [NSFileManager defaultManager];
         if(![fm fileExistsAtPath:localFile]) {
