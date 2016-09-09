@@ -46,8 +46,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         NSURL *fileURL = [NSURL URLWithString:path];
         
         NSString *localFile = [NSString stringWithFormat:@"%@%@%@", @"\'", fileURL.path, @"\'"];
+        NSLog(@"FileOpener2: Looking for file at %@", fileURL);
+        NSLog(@"FileOpener2: localFile - %@", localFile);
         
-        NSLog(@"looking for file at %@", fileURL);
         NSFileManager *fm = [NSFileManager defaultManager];
         if(![fm fileExistsAtPath:localFile]) {
             NSDictionary *jsonObj = @{@"status" : @"9",
