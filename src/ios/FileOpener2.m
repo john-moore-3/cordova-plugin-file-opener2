@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     NSString *path = [[command.arguments objectAtIndex:0] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *mimeType = command.arguments[1];
+    NSString *uti;
     
     if (!mimeType || (NSNull*)mimeType == [NSNull null]) {
         NSArray *dotParts = [path componentsSeparatedByString:@"."];
