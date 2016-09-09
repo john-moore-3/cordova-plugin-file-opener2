@@ -30,7 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 - (void) open: (CDVInvokedUrlCommand*)command {
 
-    NSString *path = command.arguments[0];
+    //NSString *path = command.arguments[0];
+    NSString *path = [[command.arguments objectAtIndex:0] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *uti = command.arguments[1];
     if (!uti || (NSNull*)uti == [NSNull null]) {
         NSArray *dotParts = [path componentsSeparatedByString:@"."];
@@ -44,10 +45,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     dispatch_async(dispatch_get_main_queue(), ^{
         // TODO: test if this is a URI or a path
         NSURL *fileURL = [NSURL URLWithString:path];
-        
         localFile = fileURL.path;
         
-        //localFile = [NSString stringWithFormat:@"%@%@%@", @"\'", fileURL.path, @"\'"];
         NSLog(@"FileOpener2: Looking for file at %@", fileURL);
         NSLog(@"FileOpener2: localFile - %@", localFile);
         
@@ -67,7 +66,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         CGRect rect = CGRectMake(0, 0, 1000.0f, 150.0f);
         CDVPluginResult* pluginResult = nil;
-        BOOL wasOpened = [self.controller presentOptionsMenuFromRect:rect inView:cont.view animated:NO];
+        //BOOL wasOpened = [self.controller presentOptionsMenuFromRect:rect inView:cont.view animated:NO];
+        BOOL wasOpened = [self.controller presentPreviewAnimated: NO];
 
         if(wasOpened) {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @""];
