@@ -31,5 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @property(nonatomic, strong) CDVViewController *cdvViewController;
 
 - (void) open: (CDVInvokedUrlCommand*)command;
+- (void) openPreview: (CDVInvokedUrlCommand*)command;
 
 @end
