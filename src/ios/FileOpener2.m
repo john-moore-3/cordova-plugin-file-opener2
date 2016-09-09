@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @implementation FileOpener2
+@synthesize controller = docController;
 
 - (void) open: (CDVInvokedUrlCommand*)command {
 
@@ -44,15 +45,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
 
     CDVViewController* cont = (CDVViewController*)[ super viewController ];
+    self.cdvViewController = cont;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // TODO: test if this is a URI or a path
         NSURL *fileURL = [NSURL URLWithString:path];
         localFile = fileURL.path;
-        
-        NSLog(@"FileOpener2: Looking for file at %@", fileURL);
-        NSLog(@"FileOpener2: localFile - %@", localFile);
-        NSLog(@"FileOpener2: uti - %@", uti);
         
         NSFileManager *fm = [NSFileManager defaultManager];
         if(![fm fileExistsAtPath:localFile]) {
@@ -64,15 +62,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return;
         }
 
-        self.controller = [UIDocumentInteractionController  interactionControllerWithURL:fileURL];
-        self.controller.delegate = self;
-        self.controller.UTI = uti;
-        self.controller.name = [fileURL.pathComponents lastObject];
+        docController = [UIDocumentInteractionController  interactionControllerWithURL:fileURL];
+        docController.delegate = self;
+        docController.UTI = uti;
+        docController.name = [fileURL.pathComponents lastObject];
 
         CGRect rect = CGRectMake(0, 0, 1000.0f, 150.0f);
         CDVPluginResult* pluginResult = nil;
         //BOOL wasOpened = [self.controller presentOptionsMenuFromRect:rect inView:cont.view animated:NO];
-        BOOL wasOpened = [self.controller presentPreviewAnimated: NO];
+        BOOL wasOpened = [docController presentPreviewAnimated: NO];
 
         if(wasOpened) {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @""];
@@ -85,5 +83,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     });
 }
+
+@end
+
+@implementation FileOpener2 (UIDocumentInteractionControllerDelegate)
+	- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
+		return self.cdvViewController;
+	}
 
 @end
