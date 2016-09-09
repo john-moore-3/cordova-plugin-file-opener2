@@ -8,22 +8,35 @@
 	]
 
 	function getFileFromApplicationUri(uri) {
+		console.log('getFileFromApplicationUri');
 	    var applicationUri = new Windows.Foundation.Uri(uri);
+	    
+	    var file = Windows.Storage.StorageFile.getFileFromApplicationUriAsync(applicationUri);
+	    console.log('file: ', file);
 
-	    return Windows.Storage.StorageFile.getFileFromApplicationUriAsync(applicationUri);
+	    return file;
 	}
 
 	function getFileFromFileUri(uri) {
+		console.log('getFileFromFileUri');
 	    var path = Windows.Storage.ApplicationData.current.localFolder.path +
                         uri.substr(8);
+        console.log('path: ', path);
+        var file = getFileFromNativePath(path);
+        console.log('file: ', file);
 
-	    return getFileFromNativePath(path);
+	    return file;
 	}
 
 	function getFileFromNativePath(path) {
+		console.log('getFileFromNativePath');
 	    var nativePath = path.split("/").join("\\");
+	    console.log('nativePath: ', nativePath);
 
-	    return Windows.Storage.StorageFile.getFileFromPathAsync(nativePath);
+		var file = Windows.Storage.StorageFile.getFileFromPathAsync(nativePath);
+		console.log('file: ', file);
+
+	    return file;
 	}
 
 	function getFileLoaderForScheme(path) {
@@ -54,8 +67,8 @@
 	                }
 	            });
 
-	        }, function (errror) {
-	            console.log("Error abriendo el archivo");
+	        }, function (error) {
+	            console.log("FileOpener2.open: Windows error - ", error);
 	        });
 		}
 		
